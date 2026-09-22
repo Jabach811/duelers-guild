@@ -1,0 +1,14 @@
+const assert = require('node:assert/strict');
+const { existsSync } = require('node:fs');
+assert(existsSync('dist/store-core.js'), 'Missing local shopping/list behavior');
+const core = require('../dist/store-core.js');
+const items = [{id:'1',name:'Forest',category:'Magic',price:1.25},{id:'2',name:'Forest - Foil',category:'Magic',price:2.50},{id:'3',name:'Deck Box',category:'Supplies',price:10}];
+assert.deepEqual(core.parseList('3 Forest\n2x Forest - Foil\n\n1 Deck Box').map(x=>[x.quantity,x.name]), [[3,'Forest'],[2,'Forest - Foil'],[1,'Deck Box']]);
+assert.deepEqual(core.parseList('0 Forest\n-2 Forest\n999999 Forest').map(x=>x.error), [true,true,true]);
+assert.deepEqual(core.searchProducts(items,{q:'forest',min:2,max:3}).map(x=>x.id), ['2']);
+assert.deepEqual(core.searchProducts(items,{q:'"<script>"'}), []);
+assert.equal(core.cartTotal([{id:'1',quantity:3},{id:'3',quantity:2}],items),23.75);
+assert.deepEqual(core.normalizeCart([{id:'1',quantity:2},{id:'1',quantity:3},{id:'unknown',quantity:1},{id:'3',quantity:-1}],items),[{id:'1',quantity:5}]);
+assert.equal(core.descends(33,1,[{id:1,parent:null},{id:2,parent:1},{id:33,parent:2}]),true);
+assert.equal(core.descends(33,4,[{id:33,parent:2},{id:2,parent:33}]),false);
+console.log('PASS: quantity parser, invalid quantities, real search filters, review totals, safe cart restoration and category ancestry.');

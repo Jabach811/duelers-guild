@@ -1,0 +1,6 @@
+.sites-runtime/
+node_modules/
+qa/screenshots/
+*.tar.gz
+*.zip
+*.log

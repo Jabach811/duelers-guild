@@ -1,0 +1,75 @@
+/* The same Guild, with a camera move and a tactile card-deal rhythm. */
+.header-controls { display:flex; align-items:center; gap:10px; order:3; }
+.header-inner #site-nav { order:2; }
+.header-inner { gap:22px; }
+.motion-toggle { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:10px 12px; border:1px solid var(--line); border-radius:4px; background:transparent; color:var(--navy); font-size:14px; white-space:nowrap; }
+.motion-toggle[hidden] { display:none; }
+.motion-toggle:hover { background:white; border-color:var(--blue); }
+.motion-toggle svg { width:16px; height:16px; }
+.motion-toggle:disabled { cursor:default; color:var(--muted); }
+.motion-play-icon { display:none; }
+html[data-motion="paused"] .motion-pause-icon { display:none; }
+html[data-motion="paused"] .motion-play-icon { display:block; }
+.site-header::after { content:''; position:absolute; inset:auto 0 -1px; height:3px; background:var(--blue); transform:scaleX(var(--reading-progress,0)); transform-origin:left; pointer-events:none; }
+.site-header.is-scrolled { box-shadow:0 6px 24px #15253f14; }
+.hero-visual { animation:none; }
+.hero-image { transition:none; }
+.hero-image-frame { transform-origin:65% 50%; }
+html[data-motion="active"] .hero-image { transform:translate3d(var(--hero-x,0px),var(--hero-y,0px),0) scale(1.08); }
+html[data-motion="active"] .hero-image-frame { animation:guild-camera 16s ease-in-out infinite; }
+html[data-hero-visible="false"] .hero-image-frame,
+html[data-page-visible="false"] .hero-image-frame { animation-play-state:paused; }
+.hero-visual::after { content:''; position:absolute; inset:0; z-index:1; background:radial-gradient(ellipse at 80% 28%,#8edcff26,transparent 54%); pointer-events:none; }
+.game-ribbon { overflow:hidden; }
+.ribbon-track { display:flex; width:max-content; }
+.game-ribbon .ribbon-track > .wrap { width:max-content; min-width:100vw; max-width:none; margin:0; flex:none; flex-wrap:nowrap; justify-content:space-around; gap:56px; padding:23px 48px; }
+.game-ribbon .ribbon-track span { display:inline-flex; align-items:center; gap:56px; }
+.game-ribbon .ribbon-track span::after { content:''; width:5px; height:5px; flex:none; background:var(--ice); transform:rotate(45deg); opacity:.6; }
+html[data-motion="active"] .ribbon-track { animation:guild-ribbon 34s linear infinite; }
+html[data-motion="paused"] .ribbon-track,
+html[data-page-visible="false"] .ribbon-track,
+html[data-motion="active"] .dialog-open .ribbon-track,
+html[data-motion="active"] .dialog-open .hero-image-frame,
+html[data-motion="active"] .game-ribbon:hover .ribbon-track { animation-play-state:paused; }
+html[data-motion="paused"] .ribbon-track { animation:guild-ribbon 34s linear infinite paused; }
+html[data-motion="reduced"] .ribbon-track { width:100%; }
+html[data-motion="reduced"] .ribbon-track > [aria-hidden="true"] { display:none; }
+html[data-motion="reduced"] .game-ribbon .ribbon-track > .wrap { width:min(1280px,calc(100% - 96px)); min-width:0; margin-inline:auto; flex-wrap:wrap; gap:20px 32px; padding:24px 0; }
+html[data-motion="reduced"] .game-ribbon .ribbon-track span::after { display:none; }
+.game-photo img,.product-photo img { transform-origin:center; }
+.game-photo,.product-photo { overflow:hidden; }
+html[data-motion="active"] :is(.game-entry,.product-card) { transition:transform 220ms cubic-bezier(.2,.7,.3,1); }
+html[data-motion="active"] :is(.game-photo img,.product-photo img) { transition:transform 350ms cubic-bezier(.2,.7,.3,1); }
+html[data-motion="active"] .button { transition:transform 180ms ease-out,background 180ms ease-out; }
+html[data-motion="active"] .button:active { transform:translateY(2px) scale(.985); }
+html[data-motion="active"] .save-product:active { transform:scale(.96); }
+html[data-motion="active"] #site-nav.is-open { animation:guild-menu 240ms cubic-bezier(.2,.7,.3,1); transform-origin:top; }
+html[data-motion="active"] dialog[open] { animation:guild-dialog 260ms cubic-bezier(.2,.7,.3,1); }
+html[data-motion="active"] details[open] > p { animation:guild-menu 230ms ease-out; }
+html[data-motion="active"] #site-nav > a { transition:color 150ms ease-out; }
+@media(hover:hover) and (pointer:fine) {
+  html[data-motion="active"] :is(.game-entry,.product-card):hover { transform:translateY(-5px); }
+  html[data-motion="active"] .game-entry:hover .game-photo img { transform:translateY(-5px) rotate(-1.5deg) scale(1.035); }
+  html[data-motion="active"] .product-card:hover .product-photo img { transform:translateY(-4px) scale(1.035); }
+  html[data-motion="active"] .button:hover { transform:translateY(-2px); }
+}
+@keyframes guild-camera { 0%,100% { transform:scale(1); } 50% { transform:scale(1.035); } }
+@keyframes guild-ribbon { to { transform:translateX(-50%); } }
+@keyframes guild-menu { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:none; } }
+@keyframes guild-dialog { from { opacity:0; transform:translateY(12px) scale(.98); } to { opacity:1; transform:none; } }
+@media(max-width:1100px) { .motion-toggle span { display:none; } .motion-toggle { width:44px; padding:10px; } }
+@media(max-width:760px) {
+  .header-inner { gap:12px; }
+  .header-controls { gap:8px; }
+  html[data-motion="active"] .hero-image-frame { animation:none; }
+  html[data-motion="active"] .hero-image { transform:none; }
+  .game-ribbon .ribbon-track > .wrap { gap:32px; padding:20px 24px; }
+  .game-ribbon .ribbon-track span { gap:32px; }
+  html[data-motion="reduced"] .game-ribbon .ribbon-track > .wrap { width:calc(100% - 40px); justify-content:center; padding:20px 0; }
+}
+@media(prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  .hero-image-frame,.hero-visual,.ribbon-track,#site-nav,dialog,details > p { animation:none !important; }
+  .hero-image,.hero-image-frame,.button,.save-product,.game-entry,.product-card,.game-photo img,.product-photo img { transform:none !important; transition:none !important; }
+}
+html[data-motion="paused"] { scroll-behavior:auto; }
