@@ -1,9 +1,3 @@
-.sites-runtime/
-node_modules/
-qa/screenshots/
-*.tar.gz
-*.zip
-*.log
 node_modules
 .next
 .wrangler
@@ -35,10 +29,13 @@ tools
 *.pdf
 *.docx
 *.xlsx
+*.tar.gz
 *.tgz
+*.zip
 *.py
 *.pyc
 *.ps1
+*.log
 *.map
 *.download
 *.csv
